@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortnite Internal - Aion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: #0a0a0a;
+            --foreground: #fafafa;
+            --card: #111111;
+            --border: #262626;
+            --primary: #ff0000;
+            --primary-foreground: #ffffff;
+            --muted-foreground: #a1a1aa;
+        }
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+        }
+        a { color: inherit; text-decoration: none; }
+        .header { border-bottom: 1px solid var(--border); background: rgba(17, 17, 17, 0.5); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 50; }
+        .header-content { max-width: 1280px; margin: 0 auto; padding: 16px 24px; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--muted-foreground); transition: color 0.2s; }
+        .back-link:hover { color: var(--primary); }
+        .main { max-width: 1280px; margin: 0 auto; padding: 48px 24px; }
+        .grid { display: grid; grid-template-columns: 1fr; gap: 48px; }
+        @media (min-width: 1024px) { .grid { grid-template-columns: 1fr 1fr; } }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+        .glow-box { box-shadow: 0 0 30px rgba(255, 0, 0, 0.1); }
+        .product-image-wrapper { position: relative; height: 384px; }
+        .product-image { width: 100%; height: 100%; object-fit: cover; }
+        .product-image-overlay { position: absolute; inset: 0; background: linear-gradient(to top, var(--background), transparent, transparent); }
+        .product-logo { position: absolute; bottom: 12px; left: 24px; height: 48px; }
+        .purchase-card { padding: 24px; }
+        .purchase-title { font-size: 20px; font-weight: 700; margin-bottom: 24px; }
+        .button-group { display: flex; flex-direction: column; gap: 12px; }
+        .button-group button { width: 100%; padding: 14px 24px; border: none; border-radius: 10px; font-weight: 600; font-size: 16px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .button-group button:hover { transform: translateY(-2px); }
+        .btn-primary { background-color: var(--primary); color: white; box-shadow: 0 10px 30px rgba(255, 0, 0, 0.4); }
+        .btn-primary:hover { box-shadow: 0 15px 40px rgba(255, 0, 0, 0.5); }
+        .btn-secondary { background-color: #1f1f1f; color: white; border: 1px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--primary); }
+        .stock-status { display: flex; align-items: center; justify-content: center; gap: 8px; color: #4ade80; font-size: 14px; margin-top: 16px; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background-color: #4ade80; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .requirements { padding: 24px; }
+        .requirements h3 { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .requirements p { color: var(--muted-foreground); margin-bottom: 8px; }
+        .requirements span { color: var(--foreground); font-weight: 500; }
+        .features-card { padding: 32px; }
+        .features-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(255, 0, 0, 0.1); border: 1px solid rgba(255, 0, 0, 0.2); border-radius: 9999px; color: var(--primary); font-weight: 600; margin-bottom: 24px; }
+        .feature-section { margin-bottom: 32px; }
+        .feature-section h3 { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .feature-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+        @media (min-width: 640px) { .feature-grid { grid-template-columns: 1fr 1fr; } }
+        .feature-item { display: flex; align-items: center; gap: 8px; color: var(--muted-foreground); }
+        .check-icon { width: 16px; height: 16px; flex-shrink: 0; }
+        .check-primary { color: var(--primary); }
+        .check-yellow { color: #eab308; }
+        .check-blue { color: #3b82f6; }
+        .check-green { color: #22c55e; }
+        .check-purple { color: #a855f7; }
+        .check-orange { color: #f97316; }
+        .check-red { color: #ef4444; }
+        .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+        .left-column { display: flex; flex-direction: column; gap: 24px; }
+
+        /* Plan Selection Grid */
+        .plan-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 0;
+        }
+
+        .plan-btn {
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .plan-btn:hover {
+            border-color: rgba(255, 0, 0, 0.5);
+        }
+
+        .plan-btn.active {
+            border-color: var(--primary);
+            background: rgba(255, 0, 0, 0.1);
+        }
+
+        .plan-btn.active .plan-label,
+        .plan-btn.active .plan-price {
+            color: var(--primary);
+        }
+
+        .plan-label {
+            font-weight: 600;
+            color: var(--muted-foreground);
+            margin-bottom: 4px;
+        }
+
+        .plan-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--muted-foreground);
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="back-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m12 19-7-7 7-7"/>
+                    <path d="M19 12H5"/>
+                </svg>
+                Back to Products
+            </a>
+        </div>
+    </header>
+    <!-- Main Content -->
+    <main class="main">
+        <div class="grid">
+            <!-- Left Column -->
+            <div class="left-column">
+                <!-- Product Image -->
+                <div class="card glow-box">
+                    <div class="product-image-wrapper">
+                        <img src="https://i.ibb.co/qYgc22tw/image.png" alt="Fortnite" class="product-image">
+                        <div class="product-image-overlay"></div>
+                        <img src="https://i.ibb.co/cSBTVJGk/files-fortnite-logo.png" alt="Fortnite Logo" class="product-logo">
+                    </div>
+                </div>
+                <!-- Purchase Card -->
+                <div class="card glow-box purchase-card">
+                    <h2 class="purchase-title">Select Plan</h2>
+                    
+                    <!-- Plan Selection -->
+                    <div class="plan-grid">
+                        <button class="plan-btn active" data-plan="1day" onclick="selectPlan('1day')">
+                            <div class="plan-label">1 Day</div>
+                            <div class="plan-price">$4.99</div>
+                        </button>
+                        <button class="plan-btn" data-plan="7day" onclick="selectPlan('7day')">
+                            <div class="plan-label">7 Days</div>
+                            <div class="plan-price">$19.99</div>
+                        </button>
+                        <button class="plan-btn" data-plan="30day" onclick="selectPlan('30day')">
+                            <div class="plan-label">30 Days</div>
+                            <div class="plan-price">$39.99</div>
+                        </button>
+                        <button class="plan-btn" data-plan="lifetime" onclick="selectPlan('lifetime')">
+                            <div class="plan-label">Lifetime</div>
+                            <div class="plan-price">249.99</div>
+                        </button>
+                    </div>
+
+                    <div class="button-group" style="margin-top: 24px;">
+                        <button class="btn-primary" id="buy-1day" data-sellhub-variant="65eb6ae8-5c45-4733-ba9e-09ae6cb1bbce">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="8" cy="21" r="1"/>
+                                <circle cx="19" cy="21" r="1"/>
+                                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+                            </svg>
+                            Purchase Now
+                        </button>
+                        <button class="btn-primary" id="buy-7day" data-sellhub-variant="6eabf155-1eac-4989-89d1-e7aa181edec9" style="display: none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="8" cy="21" r="1"/>
+                                <circle cx="19" cy="21" r="1"/>
+                                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+                            </svg>
+                            Purchase Now
+                        </button>
+                        <button class="btn-primary" id="buy-30day" data-sellhub-variant="5fe185d5-9a56-4038-8de4-4f06eb9faf26" style="display: none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="8" cy="21" r="1"/>
+                                <circle cx="19" cy="21" r="1"/>
+                                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+                            </svg>
+                            Purchase Now
+                        </button>
+                        <button class="btn-primary" id="buy-lifetime" data-sellhub-variant="20c576c7-8d07-4911-9471-dc7656aad942" style="display: none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="8" cy="21" r="1"/>
+                                <circle cx="19" cy="21" r="1"/>
+                                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+                            </svg>
+                            Purchase Now
+                        </button>
+                        <button class="btn-secondary" data-sellhub-open-cart-store-url="https://https://aion.sellhub.cx/">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="8" cy="21" r="1"/>
+                                <circle cx="19" cy="21" r="1"/>
+                                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+                            </svg>
+                            View Cart
+                        </button>
+                    </div>
+
+                    <div class="stock-status">
+                        <div class="dot"></div>
+                        <span>In Stock</span>
+                    </div>
+                </div>
+
+                <script>
+                    function selectPlan(plan) {
+                        document.querySelectorAll('.plan-btn').forEach(btn => {
+                            btn.classList.remove('active');
+                        });
+                        document.querySelector(`[data-plan="${plan}"]`).classList.add('active');
+                        document.getElementById('buy-1day').style.display = plan === '1day' ? 'flex' : 'none';
+                        document.getElementById('buy-7day').style.display = plan === '7day' ? 'flex' : 'none';
+                        document.getElementById('buy-30day').style.display = plan === '30day' ? 'flex' : 'none';
+                        document.getElementById('buy-lifetime').style.display = plan === 'lifetime' ? 'flex' : 'none';
+                    }
+                </script>
+                <!-- Requirements -->
+                <div class="card requirements">
+                    <h3>⚙️ Requirements</h3>
+                    <p><span>Supports:</span> Windows 10 / 11</p>
+                    <p><span>Builds:</span> 21H2 / 22H2 / 23H2 / 24H2</p>
+                    <p><span>CPU:</span> Intel / AMD</p>
+                </div>
+            </div>
+            <!-- Right Column - Features -->
+            <div class="card features-card">
+                <div class="features-badge">
+                    🎯 Advanced Combat & Enhancement Suite
+                </div>
+                <!-- Aimbot -->
+                <div class="feature-section">
+                    <h3>🎯 Aimbot</h3>
+                    <div class="feature-grid">
+                        <div class="feature-item"><svg class="check-icon check-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Memory Aim</div>
+                        <div class="feature-item"><svg class="check-icon check-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Silent Aim</div>
+                        <div class="feature-item"><svg class="check-icon check-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Hitbox Selection</div>
+                        <div class="feature-item"><svg class="check-icon check-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Aim Smoothing</div>
+                        <div class="feature-item"><svg class="check-icon check-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Simulated Projectiles</div>
+                        <div class="feature-item"><svg class="check-icon check-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Draw FOV</div>
+                        <div class="feature-item"><svg class="check-icon check-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Auto Fire</div>
+                        <div class="feature-item"><svg class="check-icon check-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Double Tap</div>
+                        <div class="feature-item"><svg class="check-icon check-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Hit Chance Control</div>
+                    </div>
+                </div>
+                <!-- Target Filters -->
+                <div class="feature-section">
+                    <h3>🎯 Target Filters</h3>
+                    <div class="feature-grid">
+                        <div class="feature-item"><svg class="check-icon check-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Player Filtering</div>
+                        <div class="feature-item"><svg class="check-icon check-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Distance Filter</div>
+                        <div class="feature-item"><svg class="check-icon check-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Visibility Check</div>
+                        <div class="feature-item"><svg class="check-icon check-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Team Detection</div>
+                        <div class="feature-item"><svg class="check-icon check-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Auto Target Switch</div>
+                    </div>
+                </div>
+                <hr class="divider">
+                <!-- Exploits -->
+                <div class="feature-section">
+                    <h3>💥 Exploits</h3>
+                    <div class="feature-grid">
+                        <div class="feature-item"><svg class="check-icon check-yellow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> No Recoil</div>
+                        <div class="feature-item"><svg class="check-icon check-yellow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> No Spread</div>
+                        <div class="feature-item"><svg class="check-icon check-yellow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Faster Reload</div>
+                        <div class="feature-item"><svg class="check-icon check-yellow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Instant Build</div>
+                        <div class="feature-item"><svg class="check-icon check-yellow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Build Speed</div>
+                        <div class="feature-item"><svg class="check-icon check-yellow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Structure Manipulation</div>
+                    </div>
+                </div>
+                <hr class="divider">
+                <!-- Visuals -->
+                <div class="feature-section">
+                    <h3>👀 Visuals</h3>
+                    <div class="feature-grid">
+                        <div class="feature-item"><svg class="check-icon check-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Player ESP</div>
+                        <div class="feature-item"><svg class="check-icon check-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Box ESP</div>
+                        <div class="feature-item"><svg class="check-icon check-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Skeleton ESP</div>
+                        <div class="feature-item"><svg class="check-icon check-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Distance ESP</div>
+                        <div class="feature-item"><svg class="check-icon check-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Health Display</div>
+                        <div class="feature-item"><svg class="check-icon check-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Weapon Display</div>
+                        <div class="feature-item"><svg class="check-icon check-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> OFF-Screen Indicator</div>
+                        <div class="feature-item"><svg class="check-icon check-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Player Chams</div>
+                        <div class="feature-item"><svg class="check-icon check-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Player Names</div>
+                    </div>
+                </div>
+                <hr class="divider">
+                <!-- World ESP -->
+                <div class="feature-section">
+                    <h3>🌍 World ESP</h3>
+                    <div class="feature-grid">
+                        <div class="feature-item"><svg class="check-icon check-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Loot ESP</div>
+                        <div class="feature-item"><svg class="check-icon check-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Weapon ESP</div>
+                        <div class="feature-item"><svg class="check-icon check-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Supply Drop ESP</div>
+                        <div class="feature-item"><svg class="check-icon check-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Vehicle ESP</div>
+                    </div>
+                </div>
+                <hr class="divider">
+                <!-- World Visual Tweaks -->
+                <div class="feature-section">
+                    <h3>🌙 World Visual Tweaks</h3>
+                    <div class="feature-grid">
+                        <div class="feature-item"><svg class="check-icon check-purple" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Night Mode</div>
+                        <div class="feature-item"><svg class="check-icon check-purple" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Bright Colors</div>
+                        <div class="feature-item"><svg class="check-icon check-purple" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Custom Skybox</div>
+                    </div>
+                </div>
+                <hr class="divider">
+                <!-- Misc -->
+                <div class="feature-section">
+                    <h3>🧰 Misc</h3>
+                    <div class="feature-grid">
+                        <div class="feature-item"><svg class="check-icon check-orange" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Debug Camera</div>
+                        <div class="feature-item"><svg class="check-icon check-orange" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Name Spoofer</div>
+                        <div class="feature-item"><svg class="check-icon check-orange" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Instant Loot</div>
+                        <div class="feature-item"><svg class="check-icon check-orange" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Admin Flags</div>
+                        <div class="feature-item"><svg class="check-icon check-orange" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Fly Hack</div>
+                        <div class="feature-item"><svg class="check-icon check-orange" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Interactive Debug</div>
+                        <div class="feature-item"><svg class="check-icon check-orange" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Spinbot</div>
+                        <div class="feature-item"><svg class="check-icon check-orange" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Speed Hack</div>
+                        <div class="feature-item"><svg class="check-icon check-orange" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Zoom</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- SellHub Embed Script -->
+    <script type="module" src="https://public.sellhub.cx/embeds.js"></script>
+</body>
+</html>
