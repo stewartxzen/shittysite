@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SellHub Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #1f1f1f;
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            border-radius: 10px;
+            background-color: #ffffff;
+            color: #000000;
+            padding: 12px 25px;
+            border: none;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        button svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .info {
+            background: #2a2a2a;
+            border-left: 4px solid #ff0000;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 13px;
+            color: #ccc;
+            margin-top: 20px;
+        }
+
+        .info strong {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 SellHub Purchase Test</h1>
+        <p class="subtitle">Test the SellHub embed integration</p>
+
+        <div class="button-group">
+            <button
+                data-sellhub-variant="940d2115-5a67-4716-b040-719b33586eee"
+            >
+                Buy Variant
+            </button>
+
+            <button
+                data-sellhub-cart-variant="940d2115-5a67-4716-b040-719b33586eee"
+            >
+                Add to Cart
+            </button>
+
+            <button
+                data-sellhub-open-cart-store-url="https://aion.sellhub.cx"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                View Cart
+            </button>
+        </div>
+
+        <div class="info">
+            <strong>Variant ID:</strong> 940d2115-5a67-4716-b040-719b33586eee (1 Day - $9.99)<br>
+            <strong>Store URL:</strong> https://aion.sellhub.cx<br>
+            <strong>Script:</strong> https://public.sellhub.cx/embeds.js
+        </div>
+    </div>
+
+    <script type="module" src="https://public.sellhub.cx/embeds.js"></script>
+</body>
+</html>
